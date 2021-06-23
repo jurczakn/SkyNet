@@ -1,6 +1,6 @@
 # SkyNet
 
-SkyNet is a tool used to monitor contributions accross a GitHub organization.  By simply running a python script, you will get a report of user activity over all repositories in the repo over the given time period
+SkyNet is a tool used to monitor contributions accross a GitHub organization.  By simply running a python script, you will get a report of user activity over all repositories in the org over the given time period
 
 ## Requirements
 
