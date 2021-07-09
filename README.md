@@ -6,6 +6,12 @@ SkyNet is a tool used to monitor contributions accross a GitHub organization.  B
 
 Python version 3.9.5 or newer. [link](https://www.python.org/downloads/)
 
+PIP version 21.1.3 or newer. [link](https://pip.pypa.io/en/stable/installing/)
+
+## Installing Modules
+
+run `pip install -r requirements.txt`
+
 ## Configuration
 
 You will need to create a configuration file named `SkyNetConfig.json`
