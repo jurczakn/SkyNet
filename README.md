@@ -37,7 +37,7 @@ The `SkyNetConfig.json` file needs to contain 2 fields
 
 To run SkyNet, simply run the command `py script.py` in the directory of the `script.py`.
 
-This will give you a list of all contributers to all repos in your org for the last 24 hours and give you a total of numbers of lines added and number of lines removed accross all commits on all reops.
+This will give you a list of all contributers to all repos in your org for the last 24 hours and give you a total of numbers of lines added and number of lines removed accross all commits on all repos.
 
 ### Arguments
 
