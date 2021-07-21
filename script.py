@@ -89,12 +89,24 @@ def get_repo(repo):
 r = requests.get("http://api.github.com/orgs/"+org+"/repos?per_page=100", headers=head)
 #print(r.text)
 orgObject = json.loads(r.text)
+print("Number of Repos Scanning: {}".format(len(orgObject)))
 #print(orgObject)
 #print(orgObject[0]["url"])
 
 #make request to commits on repo
 for repo in orgObject:
     get_repo(repo)
+
+pageNum = 1
+
+while len(orgObject)==100:
+    pageNum += 1
+    r = requests.get("http://api.github.com/orgs/{}/repos?per_page=100page={}".format(org, pageNum), headers=head)
+    orgObject = json.loads(r.text)
+    print("Number of Repos Scanning: {}".format(len(orgObject)))
+
+    for repo in orgObject:
+        get_repo(repo)
 
 #print ("author: {}".format(commit1Obj["author"]["login"]))
 
