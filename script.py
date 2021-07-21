@@ -61,19 +61,25 @@ def tally_commit(contributions, files, author):
 
 def get_commit(contributions, commit):
     if type(commit) is not dict or "url" not in commit:
-        print(commit)
+        print("THIS REPO CANNOT BE ANALYZED [This usually means the repo has no commit history]")
         return
     commitReq = requests.get(commit["url"], headers=head)
     commitObj = json.loads(commitReq.text)
+    #print("Author: {}".format(commit["commit"]["author"]["name"]))
     if "committer" in commitObj:
         #print (commitObj["committer"])
         if commitObj["committer"] != None and"login" in commitObj["committer"]:
-            author = commitObj["committer"]["login"]
+            author = commitObj["author"]["login"]
+            #print("Author: {}".format(commit["committer"]["login"]))
             tally_commit(contribuitions, commitObj["files"], author)
         else:
-            print("missing committer for commit ")#{}".format(commitObj))
+            #print("missing committer for commit ")#{}".format(commitObj))
+            author = commitObj["commit"]["author"]["name"]
+            tally_commit(contribuitions, commitObj["files"], author)
     else:
-        print("missing committer for commit ")#{}".format(commitObj))
+        #print("missing committer for commit ")#{}".format(commitObj))
+        author = commitObj["commit"]["author"]["name"]
+        tally_commit(contribuitions, commitObj["files"], author)
 
 def get_repo(repo):
     print("Checking repo: {}".format(repo["name"]) )
