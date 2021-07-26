@@ -7,7 +7,7 @@ from requests.api import request
 from datetime import date, datetime, timedelta
 
 #variable to store all associate contributions
-contribuitions = {}
+contributions = []
 
 #set up headers and org accessing
 config = json.load(open('SkyNetConfig.json'))
@@ -53,11 +53,17 @@ def tally_commit(contributions, files, author):
         linesAdded += file["additions"]
         linesRemoved += file["deletions"]
 
-    if author in contribuitions:
-        contribuitions[author]["linesAdded"] += linesAdded
-        contribuitions[author]["linesRemoved"] += linesRemoved
-    else:
-        contribuitions[author]={"linesAdded": linesAdded, "linesRemoved": linesRemoved}
+    
+    appended = False
+    for associate in contributions:
+        if author == associate["name"]:
+            associate["linesAdded"] += linesAdded
+            associate["linesRemoved"] += linesRemoved
+            appended = True
+            break
+    if appended is False:
+        associate = {"name": author, "linesAdded": linesAdded, "linesRemoved": linesRemoved}
+        contributions.append(associate)
 
 def get_commit(contributions, commit):
     if type(commit) is not dict or "url" not in commit:
@@ -71,15 +77,15 @@ def get_commit(contributions, commit):
         if commitObj["committer"] != None and"login" in commitObj["committer"]:
             author = commitObj["author"]["login"]
             #print("Author: {}".format(commit["committer"]["login"]))
-            tally_commit(contribuitions, commitObj["files"], author)
+            tally_commit(contributions, commitObj["files"], author)
         else:
             #print("missing committer for commit ")#{}".format(commitObj))
             author = commitObj["commit"]["author"]["name"]
-            tally_commit(contribuitions, commitObj["files"], author)
+            tally_commit(contributions, commitObj["files"], author)
     else:
         #print("missing committer for commit ")#{}".format(commitObj))
         author = commitObj["commit"]["author"]["name"]
-        tally_commit(contribuitions, commitObj["files"], author)
+        tally_commit(contributions, commitObj["files"], author)
 
 def get_repo(repo):
     print("Checking repo: {}".format(repo["name"]) )
@@ -89,7 +95,7 @@ def get_repo(repo):
 
     #grab each commit
     for commit in reposCommitsObj:
-        get_commit(contribuitions, commit)
+        get_commit(contributions, commit)
 
 #make request to repos on org
 r = requests.get("http://api.github.com/orgs/"+org+"/repos?per_page=100", headers=head)
@@ -119,4 +125,4 @@ while len(orgObject)==100:
 #tally lines added and removed for commit
 
 pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(contribuitions)
+pp.pprint(contributions)
